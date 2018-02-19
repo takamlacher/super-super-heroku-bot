@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 const fetch = require('node-fetch');
-const config = require('config.json');
+const config = require('.\config.json');
 
 bot.on("ready", () => {
   // This event will run if the bot starts, and logs in, successfully.
