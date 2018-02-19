@@ -9,6 +9,39 @@ bot.on("ready", () => {
   bot.user.setActivity(`on ${bot.guilds.size} servers`);
 });
 
+bot.on("guildCreate", guild => {
+  // This event triggers when the bot joins a guild.
+  console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
+  bot.user.setActivity(`on ${bot.guilds.size} servers`);
+});
+
+bot.on("guildDelete", guild => {
+  // this event triggers when the bot is removed from a guild.
+  console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
+  bot.user.setActivity(`on ${bot.guilds.size} servers`);
+});
+
+
+function displayMessage(pmessage, pdescription) {
+      pmessage.channel.send({embed: {
+			color: 3447003,
+			title: "Bitcoin Lightning price",
+			url: "https://coinmarketcap.com/currencies/bitcoin-lightning/",
+			thumbnail: {
+			  "url": bot.user.avatarURL
+			},
+			description: pdescription ,
+			
+			timestamp: new Date(),
+			footer: {
+			  icon_url: bot.user.avatarURL,
+			  text: "developed by pascalMiner"
+			}
+		   }
+		  });              
+}
+
+
 bot.on('message', message => {
     if (message.content === 'ping') {
     	message.reply('pong');
