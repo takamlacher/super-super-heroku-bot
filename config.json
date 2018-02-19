@@ -1,0 +1,5 @@
+{
+  "prefix": "!",
+  "urlBLT": "https://api.coinmarketcap.com/v1/ticker/bitcoin-lightning/",
+  "urlSuffixEUR": "?convert=EUR"
+}
