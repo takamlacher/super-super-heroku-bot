@@ -2,6 +2,7 @@ const Discord = require('discord.js');
 const bot = new Discord.Client();
 const fetch = require('node-fetch');
 const config = require('./config.json');
+const coins = require('./coins.json');
 
 bot.on("ready", () => {
   // This event will run if the bot starts, and logs in, successfully.
@@ -9,6 +10,7 @@ bot.on("ready", () => {
   // Example of changing the bot's playing game to something useful. `client.user` is what the
   // docs refer to as the "ClientUser".
   bot.user.setActivity(`on ${bot.guilds.size} servers`);
+  console.log('Coins loaded: ' + coins.length);
 });
 
 bot.on("guildCreate", guild => {
