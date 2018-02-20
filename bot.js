@@ -27,22 +27,36 @@ bot.on("guildDelete", guild => {
 
 
 function displayMessage(pmessage, pdescription) {
-      pmessage.channel.send({embed: {
-			color: 3447003,
-			title: "Bitcoin Lightning price",
-			url: "https://coinmarketcap.com/currencies/bitcoin-lightning/",
-			thumbnail: {
-			  "url": bot.user.avatarURL
-			},
-			description: pdescription ,
-			
-			timestamp: new Date(),
-			footer: {
-			  icon_url: bot.user.avatarURL,
-			  text: "developed by pascalMiner"
-			}
-		   }
-		  });              
+	pmessage.channel.send({embed: {
+		color: 3447003,
+		title: "Bitcoin Lightning price",
+		url: "https://coinmarketcap.com/currencies/bitcoin-lightning/",
+		thumbnail: {
+		  "url": bot.user.avatarURL
+		},
+		description: pdescription ,
+		
+		timestamp: new Date(),
+		footer: {
+		  icon_url: bot.user.avatarURL,
+		  text: "developed by pascalMiner"
+		}
+	   }
+	});              
+}
+
+function displayHelp(pmessage) {
+    pmessage.channel.send({embed: {
+	  color: 3447003,
+	  description: "Supported commands are: \$blt and \$help. Stay tuned for more..."
+	}})            
+}
+
+function displayMessage(pmessage, pdescription) {
+    pmessage.channel.send({embed: {
+	  color: 3447003,
+	  description: pdescription
+	}})            
 }
 
 
@@ -64,23 +78,52 @@ bot.on('message', message => {
   const args = message.content.toLowerCase().slice(config.prefix.length).trim().split(/ +/g);
   const command = args.shift();
  
-	
   if (command === "help") {
-	  message.channel.send({embed: {
-	  color: 3447003,
-	  description: "Supported commands are: \$blt and \$help. Stay tuned for more..."
-	}})
+	 displayHelp(message);
   }
   
-  if (command === "blt") {
+  if (command === "coin") {
 	  
-	var url = config.urlBLT;
+	if (typeof args[0] === 'undefined' ) {
+		console.log('Command coin without arg');
+		displayHelp(message);
+		return;
+	}	
+	
+	var param = args[0];
+	
+	function checkSymbol(coin) {
+		return coin.symbol.toLowerCase() === this.toString().toLowerCase();
+	}
+
+	function checkCoin(coin) {
+		return coin.id.toLowerCase() === this.toString().toLowerCase() || coin.name.toLowerCase() === this.toString().toLowerCase();
+	}
+
+	var coin = coins.find(checkSymbol,param);
+	if (typeof coin !== 'undefined'){
+		console.log("Found : " + coin.name);
+	} else {
+		coin = coins.find(checkCoin,param);
+		if (typeof coin !== 'undefined'){
+			console.log("Found : " + coin.name);
+		} else {
+			var errorMessage = "Coin not found : " + param;
+			console.log(errorMessage);
+			displayMessage(message, errorMessage);
+			return;
+		}
+	}
 	  
-	if ( args[0] === 'eur' ) {
-		url = config.urlBLT + config.urlSuffixEUR;
+	var url = config.urlCoinMarketCap + coin.id + '/';
+	
+	console.log('Fetch with url: [' + url + ']');
+	  
+	if ( args[1] === 'eur' ) {
+		url = url + config.urlSuffixEUR;
 	}
 	
-	console.log('fetch with url: [' + url + ']');
+	console.log('Fetch with url: [' + url + ']');
 	
 	fetch(url)
 	.then(response => {
@@ -153,7 +196,7 @@ bot.on('message', message => {
 			var lvolume = lvolume_usd;
 			var lmarket = lmarket_cap_usd;
 			
-			if ( args[0] === 'eur' ) {
+			if ( args[1] === 'eur' ) {
 				var lprice = lprice_eur;
 				var lvolume = lvolume_eur;
 				var lmarket = lmarket_cap_eur;
@@ -167,7 +210,7 @@ bot.on('message', message => {
     .catch(error => {
 	  console.log(error);
     });
-  } //End command === "blt"
+  } //End command === "coin"
 	
 });
 
