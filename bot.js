@@ -48,7 +48,21 @@ function displayMessage(pmessage, pdescription, titleText, titleUrl) {
 function displayHelp(pmessage) {
     pmessage.channel.send({embed: {
 	  color: 3447003,
-	  description: "Supported commands are: \$blt and \$help. Stay tuned for more..."
+	  description: "Supported commands are:",
+	  "fields": [
+      {
+        "name": "Show the help text",
+        "value": "```!help```"
+      },
+      {
+        "name": "Get a coin price in USD",
+        "value": "```!coin [btc|eth|ltc|xrp etc...]```"
+      },
+	  {
+        "name": "Get a coin price in EUR",
+        "value": "```!coin [btc|eth|ltc|xrp etc...] eur```"
+      }
+	  ]
 	}})            
 }
 
