@@ -1,5 +1,6 @@
 {
   "prefix": "!",
   "urlCoinMarketCap": "https://api.coinmarketcap.com/v1/ticker/",
+  "urlCoin": "https://coinmarketcap.com/currencies/",
   "urlSuffixEUR": "?convert=EUR"
 }
