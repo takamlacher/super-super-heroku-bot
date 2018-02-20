@@ -26,11 +26,11 @@ bot.on("guildDelete", guild => {
 });
 
 
-function displayMessage(pmessage, pdescription) {
+function displayMessage(pmessage, pdescription, titleText, titleUrl) {
 	pmessage.channel.send({embed: {
 		color: 3447003,
-		title: "Bitcoin Lightning price",
-		url: "https://coinmarketcap.com/currencies/bitcoin-lightning/",
+		title: titleText,
+		url: titleUrl,
 		thumbnail: {
 		  "url": bot.user.avatarURL
 		},
@@ -52,7 +52,7 @@ function displayHelp(pmessage) {
 	}})            
 }
 
-function displayMessage(pmessage, pdescription) {
+function displayErrorMessage(pmessage, pdescription) {
     pmessage.channel.send({embed: {
 	  color: 3447003,
 	  description: pdescription
@@ -110,12 +110,18 @@ bot.on('message', message => {
 		} else {
 			var errorMessage = "Coin not found : " + param;
 			console.log(errorMessage);
-			displayMessage(message, errorMessage);
+			displayErrorMessage(message, errorMessage);
 			return;
 		}
 	}
 	  
 	var url = config.urlCoinMarketCap + coin.id + '/';
+	var titleUrl = config.urlCoin + coin.id + '/';
+	console.log('titleUrl: [' + titleUrl + ']');
+	var titleText = coin.name + ' price';
+	console.log('titleText: [' + titleText + ']');
+	//title: "Bitcoin Lightning price",
+	//url: "https://coinmarketcap.com/currencies/bitcoin-lightning/",
 	
 	console.log('Fetch with url: [' + url + ']');
 	  
@@ -203,7 +209,7 @@ bot.on('message', message => {
 			}
 			
 			const description = lrank + "\n" + lprice  + lprice_btc + "\n" + lvolume + lmarket + lavailable_supply + "\n" + lpercent_change_1h + lpercent_change_24h + lpercent_change_7d;
-			displayMessage(message, description);
+			displayMessage(message, description, titleText, titleUrl);
 		  
 		});
 	  })
