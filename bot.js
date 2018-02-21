@@ -51,17 +51,21 @@ function displayHelp(pmessage) {
 	  description: "Supported commands are:",
 	  "fields": [
       {
-        "name": "Show the help text",
-        "value": "```!help```"
-      },
-      {
         "name": "Get a coin price in USD",
         "value": "```!coin [btc|eth|ltc|xrp etc...]```"
       },
 	  {
         "name": "Get a coin price in EUR",
         "value": "```!coin [btc|eth|ltc|xrp etc...] eur```"
-      }
+      },
+	  {
+        "name": "Get the current block for blt",
+        "value": "```!coin blt block```"
+      },
+	  {
+        "name": "Show the help text",
+        "value": "```!help```"
+      },
 	  ]
 	}})            
 }
@@ -71,6 +75,36 @@ function displayErrorMessage(pmessage, pdescription) {
 	  color: 3447003,
 	  description: pdescription
 	}})            
+}
+
+function displayBlock(pmessage, titleText, titleUrl) {
+	var url = config.urlBLTBlock;
+	
+	console.log('Fetch with url: [' + url + ']');
+	
+	fetch(url)
+	.then(response => {
+		response.json().then(json => {
+			
+			if (typeof json.error !== 'undefined') {
+				console.log('Error from block url: ' + json.error);
+				return;
+			}
+			
+			console.log('json from block url: ' + json);
+			
+			//Values
+			var block = json;
+			
+			const description = "Index: " + block;
+			displayMessage(pmessage, description, titleText, titleUrl);
+		  
+		});
+	  })
+    .catch(error => {
+	  console.log(error);
+    });
+	        
 }
 
 
@@ -139,8 +173,18 @@ bot.on('message', message => {
 	
 	console.log('Fetch with url: [' + url + ']');
 	  
-	if ( args[1] === 'eur' ) {
+	var param1 = args[1].toLowerCase();
+	console.log('param1: [' + param1 + ']');
+	
+	if ( param1 === 'eur' ) {
 		url = url + config.urlSuffixEUR;
+	}
+	
+	if ( param1 === 'block' ) {
+		titleUrl = config.urlBLTExplorer;
+		titleText = coin.name + ' current block index';
+		displayBlock(message, titleText, titleUrl);
+		return;
 	}
 	
 	console.log('Fetch with url: [' + url + ']');
