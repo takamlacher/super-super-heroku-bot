@@ -16,13 +16,13 @@ bot.on("ready", () => {
 bot.on("guildCreate", guild => {
   // This event triggers when the bot joins a guild.
   console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
-  bot.user.setActivity('- Type !help for info.');
+  bot.user.setActivity(`on ${bot.guilds.size} servers`);
 });
 
 bot.on("guildDelete", guild => {
   // this event triggers when the bot is removed from a guild.
   console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
-  bot.user.setActivity('- Type !help for info.');
+  bot.user.setActivity(`on ${bot.guilds.size} servers`);
 });
 
 
@@ -173,14 +173,16 @@ bot.on('message', message => {
 	
 	console.log('Fetch with url: [' + url + ']');
 	  
-	var param1 = args[1].toLowerCase();
+	var param1 = args[1];
 	console.log('param1: [' + param1 + ']');
 	
 	if ( param1 === 'eur' ) {
+		param1 = args[1].toLowerCase();
 		url = url + config.urlSuffixEUR;
 	}
 	
 	if ( param1 === 'block' ) {
+		param1 = args[1].toLowerCase();
 		titleUrl = config.urlBLTExplorer;
 		titleText = coin.name + ' current block index';
 		displayBlock(message, titleText, titleUrl);
