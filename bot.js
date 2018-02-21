@@ -16,13 +16,13 @@ bot.on("ready", () => {
 bot.on("guildCreate", guild => {
   // This event triggers when the bot joins a guild.
   console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
-  bot.user.setActivity(`on ${bot.guilds.size} servers`);
+  bot.user.setActivity('- Type !help for info.');
 });
 
 bot.on("guildDelete", guild => {
   // this event triggers when the bot is removed from a guild.
   console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
-  bot.user.setActivity(`on ${bot.guilds.size} servers`);
+  bot.user.setActivity('- Type !help for info.');
 });
 
 
