@@ -2,5 +2,7 @@
   "prefix": "!",
   "urlCoinMarketCap": "https://api.coinmarketcap.com/v1/ticker/",
   "urlCoin": "https://coinmarketcap.com/currencies/",
+  "urlBLTBlock": "http://165.227.219.245:3001/api/getblockcount",
+  "urlBLTExplorer": "http://165.227.219.245:3001/",
   "urlSuffixEUR": "?convert=EUR"
 }
