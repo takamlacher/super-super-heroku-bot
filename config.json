@@ -4,5 +4,11 @@
   "urlCoin": "https://coinmarketcap.com/currencies/",
   "urlBLTBlock": "http://165.227.219.245:3001/api/getblockcount",
   "urlBLTExplorer": "http://165.227.219.245:3001/",
-  "urlSuffixEUR": "?convert=EUR"
+  "urlSuffixEUR": "?convert=EUR",
+  "urlSETicker": "https://stocks.exchange/api2/ticker",
+  "SEBLTGMarket": "BLTG_BTC",
+  "urlCMCBTC": "https://api.coinmarketcap.com/v1/ticker/bitcoin/",
+  "urlSXC": "https://www.southxchange.com/api/price/",
+  "SXCBLTGBTCMarket": "BLTG/BTC",
+  "SXCBLTGUSDMarket": "BLTG/USD"
 }
