@@ -107,6 +107,131 @@ function displayBlock(pmessage, titleText, titleUrl) {
 	        
 }
 
+function processSE(pmessage, coin) {
+	var url = config.urlSETicker;
+	
+	console.log('Fetch with url: [' + url + ']');
+	
+	fetch(url)
+	.then(response => {
+		response.json().then(json => {
+			
+			if (typeof json.error !== 'undefined') {
+				console.log('Error from block url: ' + json.error);
+				return;
+			}
+			
+			if (typeof json[0] === 'undefined') {
+				// the variable is defined
+				console.log('Error: badly formated answer from stocks.exchange.');
+				return;
+			}
+			
+			//Values
+			var pairs = json;
+			if (typeof pairs !== 'undefined'){
+				console.log('Pairs from SE: ' + pairs.length);
+			} else {
+				var errorMessage = "Error: no data from SE";
+				console.log(errorMessage);
+				displayErrorMessage(pmessage, errorMessage);
+				return;
+			}
+			
+			function checkPair(pair) {
+				return pair.market_name.toLowerCase() === this.toString().toLowerCase();
+			}
+			
+			var BLTPair = pairs.find(checkPair,config.SEBLTGMarket);
+			if (typeof BLTPair !== 'undefined'){
+				console.log("Pair found : " + BLTPair.market_name);
+			} else {
+				var errorMessage = "Error: pair not found : " + config.SEBLTGMarket;
+				console.log(errorMessage);
+				displayErrorMessage(pmessage, errorMessage);
+				return;
+			}
+			
+			
+			//------------------------
+			var url = config.urlCMCBTC;
+	
+			console.log('getBTCUSDPrice() Fetch with url: [' + url + ']');
+			
+			(async function() {
+				
+				console.log('async function fetchContent()');
+				
+				const response = await fetch(url);
+				const json = await response.json();
+				
+				console.log('async function fetchContent()json: [' + json + ']');
+				
+				var BTCUSDprice = json[0].price_usd;
+						
+				if (typeof BTCUSDprice === 'undefined') {
+					console.log('Error: badly formated answer from CMC.');
+					return;
+				} else {
+					console.log('getBTCUSDPrice() got BTCUSDPrice: ' + BTCUSDprice);
+						
+					var BLTGUSDprice = (parseFloat(BTCUSDprice)*parseFloat(BLTPair.last)).toFixed(2);
+					
+					console.log("getBTCUSDPrice BLTGUSDprice: " + BLTGUSDprice);
+				
+					const description = "Price BTC: " + BLTPair.last + " BTC" + "\n" + "Price USD: $" + BLTGUSDprice ;
+					displayMessage(pmessage, description, "BLTG price from SE", "https://stocks.exchange/trade/BLTG/BTC");
+				}
+				
+			})();
+			//------------------------
+	
+		});
+	  })
+    .catch(error => {
+	  console.log(error);
+    });
+	        
+}
+
+
+function processSXC(pmessage, coin) {
+	var url = config.urlSXC + config.SXCBLTGBTCMarket;
+	
+	console.log('Fetch with url: [' + url + ']');
+	
+	fetch(url)
+	.then(response => {
+		response.json().then(json => {
+			
+			if (typeof json.error !== 'undefined') {
+				console.log('Error from block url: ' + json.error);
+				return;
+			}
+			
+			//Values
+			//{"Bid":0.00000025,"Ask":0.001,"Last":null,"Variation24Hr":null,"Volume24Hr":0}
+			var response = json;
+			if (typeof response !== 'undefined'){
+				console.log('response from SXC: ' + response);
+			} else {
+				var errorMessage = "Error: no data from SXC";
+				console.log(errorMessage);
+				displayErrorMessage(pmessage, errorMessage);
+				return;
+			}
+			
+			
+			
+			const description = "Price BTC: " + response.last + " BTC" + "\n" + "Bid: " + response.Bid + " BTC" + "\n" + "Ask: " + response.Ask + " BTC" + "\n" + "Variation 24Hr: " + response.Variation24Hr + "\n" + "Volume 24Hr: " + response.Volume24Hr + "\n";
+			displayMessage(pmessage, description, "BLTG price from southXchange", "https://www.southxchange.com/Market/Book/BLTG/BTC");
+		});
+	  })
+    .catch(error => {
+	  console.log(error);
+    });
+	        
+}
 
 bot.on('message', message => {
    
@@ -128,6 +253,34 @@ bot.on('message', message => {
  
   if (command === "help") {
 	 displayHelp(message);
+  }
+  
+  if (command === "se") {
+	  
+	if (typeof args[0] === 'undefined' ) {
+		console.log('Command se without arg');
+		displayHelp(message);
+		return;
+	}	
+	
+	var coin = args[0];
+	processSE(message, coin);
+	
+	return;
+  }
+  
+  if (command === "sxc") {
+	  
+	if (typeof args[0] === 'undefined' ) {
+		console.log('Command sxc without arg');
+		displayHelp(message);
+		return;
+	}	
+	
+	var coin = args[0];
+	processSXC(message, coin);
+	
+	return;
   }
   
   if (command === "coin") {
@@ -168,8 +321,6 @@ bot.on('message', message => {
 	console.log('titleUrl: [' + titleUrl + ']');
 	var titleText = coin.name + ' price';
 	console.log('titleText: [' + titleText + ']');
-	//title: "Bitcoin Lightning price",
-	//url: "https://coinmarketcap.com/currencies/bitcoin-lightning/",
 	
 	console.log('Fetch with url: [' + url + ']');
 	  
